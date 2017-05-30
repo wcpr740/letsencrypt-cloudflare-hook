@@ -1,4 +1,4 @@
-# CloudFlare hook for `dehydrated`
+# CloudFlare hook for `dehydrated` that deploys certificates to Proxmox.
 
 This is a hook for the [Let's Encrypt](https://letsencrypt.org/) ACME client [dehydrated](https://github.com/lukas2511/dehydrated) (previously known as `letsencrypt.sh`) that allows you to use [CloudFlare](https://www.cloudflare.com/) DNS records to respond to `dns-01` challenges. Requires Python and your CloudFlare account e-mail and API key being in the environment.
 
@@ -31,6 +31,11 @@ Your account's CloudFlare email and API key are expected to be in the environmen
 ```
 $ export CF_EMAIL='user@example.com'
 $ export CF_KEY='K9uX2HyUjeWg5AhAb'
+```
+
+The directory Proxmox nodes are in defaults to `/etc/pve/nodes/`, but can be overridden
+```
+$ export PVE_NODE_DIR='/etc/pve/nodes/'
 ```
 
 Optionally, you can specify the DNS servers to be used for propagation checking via the `CF_DNS_SERVERS` environment variable (props [bennettp123](https://github.com/bennettp123)):

@@ -17,6 +17,8 @@ import os
 import requests
 import sys
 import time
+import shutil
+import subprocess
 
 from tld import get_tld
 
@@ -44,6 +46,7 @@ try:
         'X-Auth-Key'  : os.environ['CF_KEY'],
         'Content-Type': 'application/json',
     }
+    PVE_NODE_DIR = os.environ.get('PVE_NODE_DIR', '/etc/pve/nodes/')
 except KeyError:
     logger.error(" + Unable to locate Cloudflare credentials in environment!")
     sys.exit(1)
@@ -147,7 +150,17 @@ def deploy_cert(args):
     domain, privkey_pem, cert_pem, fullchain_pem, chain_pem, timestamp = args
     logger.debug(' + ssl_certificate: {0}'.format(fullchain_pem))
     logger.debug(' + ssl_certificate_key: {0}'.format(privkey_pem))
-    return
+
+    # copy certs to each node
+    for node in os.listdir(PVE_NODE_DIR):
+        if not os.path.isdir(os.path.join(PVE_NODE_DIR, node)):
+            continue  # only use real nodes... in case there are random files in the folder
+
+        shutil.copy(fullchain_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.pem'))
+        shutil.copy(privkey_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.key'))
+
+    # restart PVE
+    subprocess.call('systemctl restart pveproxy', shell=True)
 
 
 def unchanged_cert(args):
