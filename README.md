@@ -38,6 +38,13 @@ The directory Proxmox nodes are in defaults to `/etc/pve/nodes/`, but can be ove
 $ export PVE_NODE_DIR='/etc/pve/nodes/'
 ```
 
+If you're requesting multiple certificates, the last one registered will be the one that remains.
+Thus, if you might be requesting multiple certs, make sure to define the cert you wish to copy:
+
+```
+$ export PVE_CERT='example.com'
+```
+
 Optionally, you can specify the DNS servers to be used for propagation checking via the `CF_DNS_SERVERS` environment variable (props [bennettp123](https://github.com/bennettp123)):
 
 ```
