@@ -158,8 +158,8 @@ def deploy_cert(args):
             if not os.path.isdir(os.path.join(PVE_NODE_DIR, node)):
                 continue  # only use real nodes... in case there are random files in the folder
 
-            shutil.copy(fullchain_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.pem'))
-            shutil.copy(privkey_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.key'))
+            shutil.copyfile(fullchain_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.pem'))
+            shutil.copyfile(privkey_pem, os.path.join(PVE_NODE_DIR, node, 'pveproxy-ssl.key'))
 
         # restart PVE
         subprocess.call('systemctl restart pveproxy', shell=True)
